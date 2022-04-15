@@ -1,0 +1,124 @@
+/* Header Component  */
+#div1{
+text-align: center;
+background-color: lawngreen;
+font-size: 26px;
+color:blue;
+padding:15px;
+border-bottom-right-radius: 35px;
+border-bottom-left-radius: 35px;
+
+}
+
+#div2{
+    background-color:yellow;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+.links{
+    display: inline-block;
+    margin-right: 100px;
+    
+}
+
+
+/* Content Component */
+.display{
+    display: none;
+}
+
+.selectWidth{
+    width: 30%;
+    min-width: 200px;
+    margin: auto;
+}
+
+
+.headings{
+    /* text-align: center; */
+    /* border: 1px dotted black; */
+    border-radius: 12px;
+    font-size: 20px;
+    /* width: 40%; */
+    /* margin-left: auto;
+    margin-right: auto; */
+    /* background-color: darkgray; */
+    color:blue;
+
+}
+
+
+
+.bottomLine{
+    /* text-align: center; */
+background-color:lemonchiffon;
+font-size: 10px;
+color:blue;
+/* padding-bottom:20px; */
+padding:8px;
+border-top-right-radius: 35px;
+border-top-left-radius: 35px;
+}
+
+
+.trialPositiveAmt{
+    color:green;
+    
+}
+
+.trialNegativeAmt{
+    color:red;
+}
+
+.ldgrPostveAmt{
+    color:green;
+    text-align:center;
+}
+
+.ldgrNegtveAmt{
+    color:red;
+    text-align:center;
+}
+
+.closingBalPostiv{
+color:green;
+
+}
+
+.closingBalNegatve{
+color:red;
+
+}
+
+
+tr:hover{
+    background-color:lightgrey;
+    
+    
+}
+
+.btnControl{
+    max-width: 80px;
+    background-color: lightgreen;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.material-icons{
+    color:grey
+}
+
+tr td{
+    padding: 1px !important;
+    padding-left: 5px !important;
+    border: 1px solid lightgray !important;
+    
+}
+
+th{
+    border: 1px solid lightgray !important;
+    
+}
+
