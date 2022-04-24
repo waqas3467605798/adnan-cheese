@@ -119,13 +119,13 @@ class MainBar extends Component{
 
       var pushPromise = new Promise((res,rej)=>{
 
-        firebase.database().ref('chartOfAccount'+this.state.user).on('child_added' , (data)=> { 
+        firebase.database().ref('chartOfAccount').on('child_added' , (data)=> { 
           this.state.chartOfAccountObject.push(data.val())
         }  )
 
 
         var obj = [];
-        firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+        firebase.database().ref('partyList').on('child_added' , (data)=> { 
           obj.push(data.val())
         }  )
         res(obj);
@@ -187,9 +187,9 @@ partyObj.accountCategory = accountCategory
 partyObj.sum = [0]
 
 
-var key = firebase.database().ref('partyList'+this.state.user).push().key
+var key = firebase.database().ref('partyList').push().key
 partyObj.key = key
-firebase.database().ref('partyList'+this.state.user).child(key).set(partyObj)
+firebase.database().ref('partyList').child(key).set(partyObj)
 alert('Account Opened successfully')
 this.setState({partyName:'', address:''}) 
 
@@ -236,7 +236,7 @@ reqObj.address = editAddress.replace(/  +/g, ' ').trim()
 reqObj.accountCategory = editCategory.replace(/  +/g, ' ').trim()
 
 
-firebase.database().ref('partyList'+this.state.user).child(reqObj.key).set(reqObj)
+firebase.database().ref('partyList').child(reqObj.key).set(reqObj)
 
 
 this.state.partyObjects.splice(i,1,reqObj)
@@ -249,9 +249,9 @@ this.state.partyObjects.splice(i,1,reqObj)
 saveChartOfAccount = () =>{
   var nameChartOfAccount = this.state.chartOfAccount;
 
-  var key = firebase.database().ref('chartOfAccount'+this.state.user).push().key
+  var key = firebase.database().ref('chartOfAccount').push().key
 
-firebase.database().ref('chartOfAccount'+this.state.user).child(key).set({nameChart: nameChartOfAccount, key: key})
+firebase.database().ref('chartOfAccount').child(key).set({nameChart: nameChartOfAccount, key: key})
 
 
 // this.state.chartOfAccountObject.push({key:'', nameChart:nameChartOfAccount})
@@ -355,11 +355,11 @@ class DataEntry extends Component{
     dataPushPromise.then(()=>{
       var pushPromise = new Promise((res,rej)=>{
         var obj = [];
-        firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+        firebase.database().ref('partyList').on('child_added' , (data)=> { 
           obj.push(data.val())
         }  )
   
-        firebase.database().ref('VoucherNumber'+this.state.user).on('child_added' , (data)=> {
+        firebase.database().ref('VoucherNumber').on('child_added' , (data)=> {
           this.setState({voucherNumber:data.val()})
         }  )
         res(obj);
@@ -452,12 +452,12 @@ partyLedgerObj.partyName = document.getElementById('selected_save2').value
 //This code is for creation of Party Ledger in partyList
 if('ledger' in reqPartyObj){
 reqPartyObj.ledger.push(partyLedgerObj)
-firebase.database().ref('partyList'+this.state.user).child(reqPartyObj.key).set(reqPartyObj)
+firebase.database().ref('partyList').child(reqPartyObj.key).set(reqPartyObj)
 
 }else{
 reqPartyObj.ledger = []
 reqPartyObj.ledger.push(partyLedgerObj)
-firebase.database().ref('partyList'+this.state.user).child(reqPartyObj.key).set(reqPartyObj)
+firebase.database().ref('partyList').child(reqPartyObj.key).set(reqPartyObj)
 }
 
 
@@ -465,19 +465,19 @@ firebase.database().ref('partyList'+this.state.user).child(reqPartyObj.key).set(
 if('sum' in reqPartyObj){
 reqPartyObj.sum.push(Number(this.state.debit))
 
-firebase.database().ref('partyList'+this.state.user).child(reqPartyObj.key).set(reqPartyObj)
+firebase.database().ref('partyList').child(reqPartyObj.key).set(reqPartyObj)
 
 }else{
 reqPartyObj.sum = []
 reqPartyObj.sum.push(Number(this.state.debit))
-firebase.database().ref('partyList'+this.state.user).child(reqPartyObj.key).set(reqPartyObj)
+firebase.database().ref('partyList').child(reqPartyObj.key).set(reqPartyObj)
 }
 
 
 
 // alert('Entry successfully saved..!')
 this.setState({debit:'',date:'',narration:'',voucherNumber:vouNum})
-firebase.database().ref('VoucherNumber'+this.state.user).child('VoucherNumber').set(vouNum)
+firebase.database().ref('VoucherNumber').child('VoucherNumber').set(vouNum)
 }else{alert('Please select the Account First')}
 
 }
@@ -592,7 +592,7 @@ class Ledger extends Component{
 
       var pushPromise = new Promise((resolve,reject)=>{
         var obj = [];
-        firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+        firebase.database().ref('partyList').on('child_added' , (data)=> { 
           obj.push(data.val())
         }  )
         resolve(obj)
@@ -811,7 +811,7 @@ class Ledger extends Component{
 
 
     //for delete in firebase
-    firebase.database().ref('partyList'+this.state.user).child(reqObj.key).set(reqObj)
+    firebase.database().ref('partyList').child(reqObj.key).set(reqObj)
     //code ended
   
   
@@ -860,7 +860,7 @@ class Ledger extends Component{
   
   
   //For edited in firebase database
-    firebase.database().ref('partyList'+this.state.user).child(reqObj.key).set(reqObj)
+    firebase.database().ref('partyList').child(reqObj.key).set(reqObj)
   //code ended
   
   
@@ -886,7 +886,7 @@ class Ledger extends Component{
     var key = reqObj.key
   
     //for delete in Firebase database
-    firebase.database().ref('partyList'+this.state.user).child(key).remove()
+    firebase.database().ref('partyList').child(key).remove()
     //code ended
   
   //for delete updation in state
@@ -1066,7 +1066,7 @@ class Ledger extends Component{
       //second promise function is starting
       var pushPromise = new Promise((res,rej)=>{
         var obj = [];
-        firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+        firebase.database().ref('partyList').on('child_added' , (data)=> { 
           obj.push(data.val())
         }  )
         res(obj);
@@ -1276,7 +1276,7 @@ class Ledger extends Component{
 
     var pushPromise = new Promise((resolve,reject)=>{
       var obj = [];
-      firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+      firebase.database().ref('partyList').on('child_added' , (data)=> { 
         obj.push(data.val())
       }  )
       resolve(obj)

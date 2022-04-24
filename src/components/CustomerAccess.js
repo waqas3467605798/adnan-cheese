@@ -1,105 +1,105 @@
-import react, {Component} from 'react'
-import '../App.css';
-// import {Link, Route,BrowserRouter} from 'react-router-dom'
-import firebase from './Fire'
-// import App from '../App'
+// import react, {Component} from 'react'
+// import '../App.css';
+// // import {Link, Route,BrowserRouter} from 'react-router-dom'
+// import firebase from './Fire'
+// // import App from '../App'
 
 
 
 //This Component is made to show the all App you made
-class CustomerAccess extends Component{
-    constructor(){
-        super();
-        this.state ={
-            customerAccessList:[],
-            uid:'',
-            keyWords:'',
-            ledgers:[],
-            ledgerBalance:[],
-            ourObj:'',
-            ledgerFor500trans:-500,
-            showstm:false,
-            partyObjects:[],
-            showBtn:false,
-            accountTitle:'',
-            renderLedgerData:false,
-            noData:'',
-            stmBtn:false,
-            debitTotal:'',
-            creditTotal:''
+// class CustomerAccess extends Component{
+//     constructor(){
+//         super();
+//         this.state ={
+//             customerAccessList:[],
+//             uid:'',
+//             keyWords:'',
+//             ledgers:[],
+//             ledgerBalance:[],
+//             ourObj:'',
+//             ledgerFor500trans:-500,
+//             showstm:false,
+//             partyObjects:[],
+//             showBtn:false,
+//             accountTitle:'',
+//             renderLedgerData:false,
+//             noData:'',
+//             stmBtn:false,
+//             debitTotal:'',
+//             creditTotal:''
             
-        }
+//         }
 
-    }
+//     }
 
 
-    componentDidMount(){
+//     componentDidMount(){
 
-        var dataPushPromise = new Promise( (res,rej)=>{
-            var objj = [];
-            firebase.database().ref('customerAccess').on('child_added' , (data)=> { 
-              objj.push(data.val())
-            }  )
-            res(objj);
-      } )
-      dataPushPromise.then((ob)=>{
-  this.setState({customerAccessList:ob})
+//         var dataPushPromise = new Promise( (res,rej)=>{
+//             var objj = [];
+//             firebase.database().ref('customerAccess').on('child_added' , (data)=> { 
+//               objj.push(data.val())
+//             }  )
+//             res(objj);
+//       } )
+//       dataPushPromise.then((ob)=>{
+//   this.setState({customerAccessList:ob})
 
-      })
+//       })
   
-    }
+//     }
 
 
 
-    changeHandler= (e)=>{
-        this.setState({[e.target.name]: e.target.value})
-    }
+//     changeHandler= (e)=>{
+//         this.setState({[e.target.name]: e.target.value})
+//     }
 
 
 
 
 
-clickMe=()=>{
+// clickMe=()=>{
 
-    var keyExist = this.state.customerAccessList.find( (o)=>{return o.keyWords === this.state.keyWords}  )
+//     var keyExist = this.state.customerAccessList.find( (o)=>{return o.keyWords === this.state.keyWords}  )
     
-    if(keyExist){
-    this.setState({accountTitle:keyExist.partyName})
-    var newPromise = new Promise((res,rej)=>{
-    var objects =[]
-    var reqObjs = this.state.customerAccessList.find( (o)=>{return o.keyWords === this.state.keyWords}  )
-    firebase.database().ref('partyList'+reqObjs.uid).on('child_added' , (data)=> { 
-    objects.push(data.val())
-             }  )
+//     if(keyExist){
+//     this.setState({accountTitle:keyExist.partyName})
+//     var newPromise = new Promise((res,rej)=>{
+//     var objects =[]
+//     var reqObjs = this.state.customerAccessList.find( (o)=>{return o.keyWords === this.state.keyWords}  )
+//     firebase.database().ref('partyList'+reqObjs.uid).on('child_added' , (data)=> { 
+//     objects.push(data.val())
+//              }  )
              
-    res(objects)
+//     res(objects)
     
-    })
+//     })
     
     
-    newPromise.then((obs)=>{
+//     newPromise.then((obs)=>{
         
-    this.setState({partyObjects:obs})
+//     this.setState({partyObjects:obs})
        
-    })
-    .then(()=>{
-        this.setState({showBtn:true})
+//     })
+//     .then(()=>{
+//         this.setState({showBtn:true})
         
-    })
+//     })
      
 
 
-    setTimeout(() => {
-        this.setState({stmBtn:true})
-    }, 3000);
+//     setTimeout(() => {
+//         this.setState({stmBtn:true})
+//     }, 3000);
 
 
 
 
 
-    }else{
-        alert('Your Entered Password is incorrect')
-    }
+//     }else{
+//         alert('Your Entered Password is incorrect')
+//     }
 
 
 
@@ -107,49 +107,49 @@ clickMe=()=>{
 
 
 
-    }
+//     }
 
 
 
-    showFullStm=()=>{
+//     showFullStm=()=>{
 
-        this.setState({showstm:true})
-        var reqObj = this.state.partyObjects.find(  (obj)=>{return obj.keyWords === this.state.keyWords}  )
+//         this.setState({showstm:true})
+//         var reqObj = this.state.partyObjects.find(  (obj)=>{return obj.keyWords === this.state.keyWords}  )
       
-        // to get total sum of debit side and credit side
-        this.setState({debitTotal:reqObj.sum.filter((nm,indx)=>{return nm>0}).reduce( (total,num)=>{return total+num},0)}) // for test base only
-        this.setState({creditTotal:reqObj.sum.filter((nm,indx)=>{return nm<0}).reduce( (total,num)=>{return total+num},0)}) // for test base only
-        //sum of debit and credit side is ended
+//         // to get total sum of debit side and credit side
+//         this.setState({debitTotal:reqObj.sum.filter((nm,indx)=>{return nm>0}).reduce( (total,num)=>{return total+num},0)}) // for test base only
+//         this.setState({creditTotal:reqObj.sum.filter((nm,indx)=>{return nm<0}).reduce( (total,num)=>{return total+num},0)}) // for test base only
+//         //sum of debit and credit side is ended
     
 
-            if('ledger' in reqObj){
-                var ledgerData = reqObj.ledger;
-                var ledgerBalance = reqObj.sum
-                this.setState({ledgers: ledgerData, renderLedgerData:true, noData:null, ledgerBalance:ledgerBalance})
+//             if('ledger' in reqObj){
+//                 var ledgerData = reqObj.ledger;
+//                 var ledgerBalance = reqObj.sum
+//                 this.setState({ledgers: ledgerData, renderLedgerData:true, noData:null, ledgerBalance:ledgerBalance})
                
-               }
-               else{
+//                }
+//                else{
                  
-                 var noDataFound = 'No data found'
-                 this.setState({noData: noDataFound, renderLedgerData:false})
-                 console.log(noDataFound)
+//                  var noDataFound = 'No data found'
+//                  this.setState({noData: noDataFound, renderLedgerData:false})
+//                  console.log(noDataFound)
                  
-               }
+//                }
         
         
         
         
         
-        this.setState({sum:[]}) //As the render method will run again, so the array of sum and sumQty in state should be zero
+//         this.setState({sum:[]}) //As the render method will run again, so the array of sum and sumQty in state should be zero
             
-        // }else{alert('Please select the Account First')}
+//         // }else{alert('Please select the Account First')}
       
         
 
 
 
 
-    }
+//     }
 
 
 
@@ -160,13 +160,13 @@ clickMe=()=>{
 
 
 
-    render(){
-        return(
-        <div id='up'>
+    // render(){
+        // return(
+        // <div id='up'>
 {/* <div className={this.state.customerAccessList.length === 0 ? 'display' : ''}> */}
 {/* <div style={{textAlign:'center', backgroundColor:'blue',fontSize:'26px',color:'white',padding:'15px', borderBottomLeftRadius:'35px', borderBottomRightRadius:'35px'}}>Customer Access Portal</div> */}
 
-<br/>
+{/* <br/>
 
 <div className={this.state.showBtn === false ? '' : 'display'}>
     <span style={{fontSize:'15px', color:'blue'}}>Please write Password here; </span>
@@ -212,7 +212,7 @@ clickMe=()=>{
 
 
 
-<p id='down'></p>
+<p id='down'></p> */}
 
 
 {/* </div>
@@ -221,9 +221,9 @@ Loading
 </div> */}
 
 
-        </div>
-        )
-    }
-}
+//         </div>
+//         )
+//     }
+// }
 
-export default CustomerAccess;
+// export default CustomerAccess;

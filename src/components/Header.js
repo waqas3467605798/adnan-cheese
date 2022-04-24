@@ -31,7 +31,7 @@ import {Link} from 'react-router-dom'
     <div>
     
       <div id='div1'> 
-      Easy Accounts
+      Data Entry
       </div>
 
       <div id='div2'>

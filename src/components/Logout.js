@@ -34,7 +34,7 @@ import firebase from './Fire'
 
     var pushPromise = new Promise((resolve,reject)=>{
       var obj = [];
-      firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
+      firebase.database().ref('partyList').on('child_added' , (data)=> { 
         obj.push(data.val())
       }  )
       resolve(obj)
@@ -124,7 +124,7 @@ import firebase from './Fire'
     obj.key = key
     obj.realObjectKey = reqObj.key
     firebase.database().ref('customerAccess').child(key).set(obj)
-    firebase.database().ref('partyList'+this.state.user).child(reqObj.key).set(reqObj)
+    firebase.database().ref('partyList').child(reqObj.key).set(reqObj)
     // this.state.customerAccessList.push(obj)
     alert('Customer Access successfully Granted')
     // this.setState({keyWords:''}) 
@@ -179,7 +179,7 @@ import firebase from './Fire'
       var ourObject = this.state.partyObjects.find((obj)=>{return obj.partyName === reqObj.partyName})
       ourObject.keyWords= reqObj.keyWords
       
-      firebase.database().ref('partyList'+this.state.user).child(ourObject.key).set(ourObject)
+      firebase.database().ref('partyList').child(ourObject.key).set(ourObject)
     alert(msg)
     
     })
@@ -269,9 +269,9 @@ import firebase from './Fire'
 <br/>
 
 
-<div className='container center'>
+{/* <div className='container center'>
 <button onClick={this.access} style={{padding:'10px', borderRadius:'8px'}}> Allow Access to customer </button>
-</div>
+</div> */}
 <div className={this.state.showAccessDiv===false ? 'display' : 'container'}>
   <br/><br/><br/>
   <span style={{fontSize:'16px', color:'blue'}}> Please Select the Account and create password to allow access </span>
