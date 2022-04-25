@@ -17,7 +17,7 @@ class Heading extends Component{
 render(){
     return(
         <div>
-            <br/>
+            
             <div style={{border:'3px solid blue', width:'45%',margin:'auto',textAlign:'center',padding:'10px',borderRadius:'10px', fontSize:'150%',color:'blue'}}>
             <b>Adnan's Cheese</b>
             </div>
@@ -50,7 +50,8 @@ class Trial extends Component{
             ledgerFor30Days:-50,
             user:null,
             showSummary:false,
-            pageRefresh:0
+            pageRefresh:0,
+            loadingFromFirebase:1
         }
     }
 
@@ -107,6 +108,36 @@ class Trial extends Component{
   
   
       
+
+
+
+      setTimeout(()=>{
+        this.setState({loadingFromFirebase:0})
+      
+      setTimeout(()=>{
+        firebase.database().ref('loadingDefaultValue').on('child_added' , (data)=> {
+          this.setState({loadingFromFirebase:data.val()})
+        }  )
+      },900)
+      
+  
+      setTimeout(()=>{
+        this.setState({seemsInternetIsSlow:'Seems internet speed is slow, try again later'})
+      },8000)
+  
+  
+      },200)
+
+
+
+
+
+
+
+
+
+
+
     }
   
   
@@ -170,7 +201,11 @@ class Trial extends Component{
 render(){
     return(
         <div>
-        
+        <div className={this.state.loadingFromFirebase===0?'display':''}>
+
+
+
+
         <div className='container'>
         <p style={{cursor:'pointer', color:'blue'}} onClick={this.showSummary}>Show Summary</p>
         </div>
@@ -215,6 +250,63 @@ render(){
           </div>
   
           {/* <iframe id="ifmcontentstoprint" style={{height:'0px', width: '0px', position: 'absolute'}}></iframe> */}
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div className={this.state.loadingFromFirebase===0?'container':'display'}>
+  <br/><br/><br/>
+  {/* <span style={{color:'green',fontSize:'23px'}}>Loading.....</span><br/> */}
+  
+  <span style={{color:'green',fontSize:'20px'}}>Please Wait....</span><br/>
+
+{/* below is pre-loader code */}
+  <div class="preloader-wrapper active">
+    <div class="spinner-layer spinner-red-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+  
+
+
+  
+  
+  
+  
+  <span style={{color:'red'}}>{this.state.seemsInternetIsSlow}</span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
           </div>
     )
 }
@@ -354,7 +446,7 @@ class LoginForm extends Component{
     showLoginForm = ()=>{
         var key = prompt('Enter Key words')
 
-        if(key==='abc'){
+        if(key==='adn'){
         this.setState({showLoginForm:true})
     }else{
         alert('You have entered wrong key')
@@ -433,11 +525,11 @@ class LoginForm extends Component{
 
 
 
-<div className='bottomLine'> 
+{/* <div className='bottomLine'>  */}
 {/* Prepared By: Waqas Saleem <br/>
 Easy Accounts Management System<br/> */}
-Developed By: Waqas Saleem Contact: +923467605798 Email: waqas.mba86@gmail.com
-</div>
+{/* Developed By: Waqas Saleem Contact: +923467605798 Email: waqas.mba86@gmail.com */}
+{/* </div> */}
 
 {/* </div> */}
 
@@ -472,13 +564,24 @@ const Login = ()=>{
     
       return(
         <div>
+          <LoginCompo />
             <Heading/>
         <Trial ref={componentRef}/>
         <br/><br/><br/>
+        <div className='container'>
         <a id='printButton' style={{cursor:'pointer'}} onClick={handlePrint}>Print/PDF</a>
+        </div>
         <br/><br/><br/><br/>
-        <LoginCompo />
+        
     
+
+<div className='bottomLine'> 
+{/* Prepared By: Waqas Saleem <br/>
+Easy Accounts Management System<br/> */}
+Developed By: Waqas Saleem Contact: +923467605798 Email: waqas.mba86@gmail.com
+</div>
+
+
     
         
         </div>

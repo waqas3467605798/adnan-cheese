@@ -221,7 +221,9 @@ import firebase from './Fire'
 
 
 
-
+    // saveLoadingDefaultValue=()=>{
+    //   firebase.database().ref('loadingDefaultValue').set({defaultValue:this.state.loadingDefaultValue})
+    //   }
 
 
 
@@ -244,6 +246,11 @@ import firebase from './Fire'
                <span style={{color:'blue', fontSize:'20px'}}><b>Welcome... </b> <span><b style={{color:'blue',marginLeft:'30px'}}>{this.state.userEmail}</b></span></span>
               </div>
 
+
+
+              {/* <span style={{color:'blue'}}><b>Loading Default value</b></span>
+          <input type='Number' name='loadingDefaultValue' value={this.state.loadingDefaultValue} placeholder='Loading default value' onChange={this.changeHandler}/>
+          <button onClick={this.saveLoadingDefaultValue}>Save</button> */}
 
 
 
