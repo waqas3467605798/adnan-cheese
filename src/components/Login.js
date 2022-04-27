@@ -2,7 +2,7 @@ import react, {Component , useRef} from 'react'
 import '../App.css';
 import {Link, Route,BrowserRouter} from 'react-router-dom'
 import firebase from './Fire'
-import CustomerAccess from './CustomerAccess'
+
 import App from '../App'
 import {useReactToPrint} from 'react-to-print'
 
@@ -18,8 +18,9 @@ render(){
     return(
         <div>
             
-            <div style={{border:'3px solid blue', width:'45%',margin:'auto',textAlign:'center',padding:'10px',borderRadius:'10px', fontSize:'150%',color:'blue'}}>
+            <div style={{margin:'auto',textAlign:'center',padding:'10px',borderRadius:'10px', fontSize:'200%',color:'blue',backgroundColor:'lightgray'}}>
             <b>Adnan's Cheese</b>
+            <hr/>
             </div>
         </div>
     )
@@ -47,9 +48,12 @@ class Trial extends Component{
             ledgerBalance:[],
             sum:[],
             accountTitle:'',
-            ledgerFor30Days:-50,
+            ledgerFor30Days:-500,
             user:null,
             showSummary:false,
+            enterKeyInput:false,
+            keyValue:'',
+            wrongKey:'',
             pageRefresh:0,
             loadingFromFirebase:1
         }
@@ -142,6 +146,15 @@ class Trial extends Component{
   
   
     
+    changeHandler = (e) => {
+
+      this.setState({ 
+      [e.target.name]: e.target.value
+      })
+      
+      }
+
+
     
     
       displayLedger = (i)=> {
@@ -186,16 +199,30 @@ class Trial extends Component{
 
 
       showSummary=()=>{
-        var keywords = prompt('Enter Key')
+        
+            this.setState({enterKeyInput:true})
+        
+      }
+
+
+      showSummaryAfterKey=()=>{
+        var keywords = this.state.keyValue
         if(keywords==='adn'){
-            this.setState({showSummary:true})
+            this.setState({showSummary:true, enterKeyInput:false, wrongKey:''})
         }else{
-            alert('you have entered Wrong key')
-            this.setState({showSummary:false})
+            
+            this.setState({showSummary:false, wrongKey:'You have entered Wrong Key'})
         }
       }
 
 
+
+
+
+
+      showStatement=()=>{
+
+      }
 
 
 render(){
@@ -205,17 +232,26 @@ render(){
 
 
 
-
+<br/>
         <div className='container'>
-        <p style={{cursor:'pointer', color:'blue'}} onClick={this.showSummary}>Show Summary</p>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'blue'}} onClick={this.showSummary}>Summary</span>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'blue'}} onClick={this.showStatement}>Statement</span>
         </div>
+
+
+        <div className={this.state.enterKeyInput===false?'display':'container'}>
+          <input type='text' onChange={this.changeHandler} value={this.state.keyValue} name='keyValue' className='browser-default' placeholder='Enter Key'/> <button onClick={this.showSummaryAfterKey}>OK</button><br/>
+        
+        <span style={{color:'red'}}><b>{this.state.wrongKey}</b></span>
+        </div>        
+
 
     {/* {this.state.pageRefresh}         */}
           <div className={this.state.showSummary===false?'display':'container'}>
             
     
             {/* the below div is in case of trial display */}
-            <br/><br/>
+            
             <div id='trialPrint' className={this.state.ledgerDisplay === false ? '' : 'display'}> 
   
           <br/>
@@ -236,10 +272,10 @@ render(){
           {/* the following div is in case of ledger display */}
           <div className={this.state.ledgerDisplay === true ? '' : 'display'}>
             <br/><br/>
-          <p><b>ACCOUNT TITLE:</b> <span style={{color:'green', fontSize:'18px'}}>{this.state.accountTitle} </span><br/>
-          <span style={{color:'red',fontSize:'14px'}}>Last 50-Transactions</span></p>
+          <p>Account Title: <span style={{color:'green', fontSize:'18px'}}> <b> {this.state.accountTitle}</b></span><br/>
+          <span style={{color:'green',fontSize:'14px'}}>Last 500-Transactions</span></p>
           <table style={{maxWidth:'700px',margin:'auto'}}><thead><tr><th>V#</th><th>Date</th><th>Remarks</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td>{item.voucherNumber}</td><td>{item.date}</td><td style={{minWidth:'160px'}}>{item.narration}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
-          <button className="waves-effect waves-dark btn" onClick={this.backToTrial}>Back to summary</button>
+          <span style={{cursor:'pointer', color:'red'}} onClick={this.backToTrial}><b>Back to summary</b></span>
           
           </div>
         <br/>
@@ -504,34 +540,6 @@ class LoginForm extends Component{
               
 
 
-
-
-
-{/* <hr style={{height:'2px', backgroundColor:'red'}}/>
-
-<br/><br/> */}
-
-
-{/* <div className='container'>
-<BrowserRouter>
-<Link to='/CustomerAccess' className='headings' style={{fontSize:'17px', backgroundColor:'lightgray', padding:'10px'}} > <b>Customer Login</b> </Link>
-<Route path='/CustomerAccess' component={CustomerAccess}/> 
- </BrowserRouter>
-</div> */}
-
-
-
-
-
-
-
-{/* <div className='bottomLine'>  */}
-{/* Prepared By: Waqas Saleem <br/>
-Easy Accounts Management System<br/> */}
-{/* Developed By: Waqas Saleem Contact: +923467605798 Email: waqas.mba86@gmail.com */}
-{/* </div> */}
-
-{/* </div> */}
 
 
 
