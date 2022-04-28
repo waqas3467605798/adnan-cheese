@@ -50,8 +50,11 @@ class Trial extends Component{
             accountTitle:'',
             ledgerFor30Days:-500,
             user:null,
+            showNavBar:false,
             showSummary:false,
-            enterKeyInput:false,
+            showStatement:false,
+            enterKeyInput:true,
+            // enterKeyInputForStatement:false,
             keyValue:'',
             wrongKey:'',
             pageRefresh:0,
@@ -198,31 +201,43 @@ class Trial extends Component{
 
 
 
+      // showSummary=()=>{
+        
+      //       this.setState({enterKeyInput:true, enterKeyInputForStatement:false, showStatement:false})
+        
+      // }
+
+
       showSummary=()=>{
         
-            this.setState({enterKeyInput:true})
+            this.setState({showSummary:true, showStatement:false, enterKeyInput:false,wrongKey:'', keyValue:''})
         
       }
 
 
-      showSummaryAfterKey=()=>{
-        var keywords = this.state.keyValue
-        if(keywords==='adn'){
-            this.setState({showSummary:true, enterKeyInput:false, wrongKey:''})
-        }else{
-            
-            this.setState({showSummary:false, wrongKey:'You have entered Wrong Key'})
-        }
-      }
 
 
-
-
+  
 
 
       showStatement=()=>{
-
+        
+            this.setState({showStatement:true, showSummary:false, enterKeyInput:false, wrongKey:'',keyValue:''})
+        
       }
+
+
+
+      showNavBar=()=>{
+        var keywords = this.state.keyValue
+        if(keywords==='adn'){
+
+        this.setState({enterKeyInput:false})
+        }else{
+          this.setState({enterKeyInput:true, wrongKey:'You have entered Wrong Key'})
+        }
+      }
+
 
 
 render(){
@@ -233,17 +248,26 @@ render(){
 
 
 <br/>
-        <div className='container'>
-        <span className='navBarHomePage' style={{cursor:'pointer', color:'blue'}} onClick={this.showSummary}>Summary</span>
-        <span className='navBarHomePage' style={{cursor:'pointer', color:'blue'}} onClick={this.showStatement}>Statement</span>
+        <div className={this.state.enterKeyInput===false?'container':'display'}>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'gray', fontSize:'12px'}} onClick={this.showSummary}>Summary</span>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showStatement}>Statement</span>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showPartyList}>List</span>
         </div>
 
 
         <div className={this.state.enterKeyInput===false?'display':'container'}>
-          <input type='text' onChange={this.changeHandler} value={this.state.keyValue} name='keyValue' className='browser-default' placeholder='Enter Key'/> <button onClick={this.showSummaryAfterKey}>OK</button><br/>
-        
+          <input type='text' onChange={this.changeHandler} value={this.state.keyValue} name='keyValue' className='browser-default' placeholder='Enter Key'/> <button onClick={this.showNavBar}>OK</button><br/>
         <span style={{color:'red'}}><b>{this.state.wrongKey}</b></span>
         </div>        
+
+
+
+
+        {/* <div className={this.state.enterKeyInputForStatement===false?'display':'container'}>
+          <input type='text' onChange={this.changeHandler} value={this.state.keyValue} name='keyValue' className='browser-default' placeholder='Enter Key'/> <button onClick={this.showStatementAfterKey}>OK</button><br/>
+        <span style={{color:'red'}}><b>{this.state.wrongKey}</b></span>
+        </div> */}
+
 
 
     {/* {this.state.pageRefresh}         */}
@@ -284,8 +308,18 @@ render(){
           </div>
           
           </div>
+
+
+
+
+
+{/* Here from div of Statement */}
+<div className={this.state.showStatement===false?'display':'container'}>
+  My Statement
+</div>
+
   
-          {/* <iframe id="ifmcontentstoprint" style={{height:'0px', width: '0px', position: 'absolute'}}></iframe> */}
+          
           </div>
 
 
