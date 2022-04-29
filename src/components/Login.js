@@ -18,9 +18,10 @@ render(){
     return(
         <div>
             
-            <div style={{margin:'auto',textAlign:'center',padding:'10px',borderRadius:'10px', fontSize:'200%',color:'blue',backgroundColor:'lightgray'}}>
-            <b>Adnan's Cheese</b>
-            <hr/>
+            <div style={{margin:'auto',textAlign:'center',padding:'10px',borderRadius:'10px', fontSize:'200%',color:'blue'}}>
+            <b>بسم اللہ الرحمن الرحیم </b>
+            
+            
             </div>
         </div>
     )
@@ -53,8 +54,21 @@ class Trial extends Component{
             showNavBar:false,
             showSummary:false,
             showStatement:false,
+            showPartyList:false,
             enterKeyInput:true,
-            // enterKeyInputForStatement:false,
+
+
+          // state of get list of parties
+          address:'',
+          partyName:'',
+          chartOfAccount:'',
+          // partyObjects:[],
+          chartOfAccountObject:[],
+          getListStatus:false,
+
+
+
+            
             keyValue:'',
             wrongKey:'',
             pageRefresh:0,
@@ -210,7 +224,7 @@ class Trial extends Component{
 
       showSummary=()=>{
         
-            this.setState({showSummary:true, showStatement:false, enterKeyInput:false,wrongKey:'', keyValue:''})
+            this.setState({showSummary:true, showStatement:false,showPartyList:false, enterKeyInput:false,wrongKey:'', keyValue:''})
         
       }
 
@@ -222,11 +236,15 @@ class Trial extends Component{
 
       showStatement=()=>{
         
-            this.setState({showStatement:true, showSummary:false, enterKeyInput:false, wrongKey:'',keyValue:''})
+            this.setState({showStatement:true, showSummary:false, showPartyList:false, enterKeyInput:false, wrongKey:'',keyValue:''})
         
       }
 
 
+
+      showPartyList=()=>{
+        this.setState({showPartyList:true, showStatement:false, showSummary:false, enterKeyInput:false, wrongKey:'',keyValue:''})
+      }
 
       showNavBar=()=>{
         var keywords = this.state.keyValue
@@ -248,14 +266,14 @@ render(){
 
 
 <br/>
-        <div className={this.state.enterKeyInput===false?'container':'display'}>
+        <div style={{textAlign:'center'}} className={this.state.enterKeyInput===false?'container':'display'}>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray', fontSize:'12px'}} onClick={this.showSummary}>Summary</span>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showStatement}>Statement</span>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showPartyList}>List</span>
         </div>
 
 
-        <div className={this.state.enterKeyInput===false?'display':'container'}>
+        <div style={{textAlign:'center'}} className={this.state.enterKeyInput===false?'display':'container'}>
           <input type='text' onChange={this.changeHandler} value={this.state.keyValue} name='keyValue' className='browser-default' placeholder='Enter Key'/> <button onClick={this.showNavBar}>OK</button><br/>
         <span style={{color:'red'}}><b>{this.state.wrongKey}</b></span>
         </div>        
@@ -296,10 +314,14 @@ render(){
           {/* the following div is in case of ledger display */}
           <div className={this.state.ledgerDisplay === true ? '' : 'display'}>
             <br/><br/>
-          <p>Account Title: <span style={{color:'green', fontSize:'18px'}}> <b> {this.state.accountTitle}</b></span><br/>
-          <span style={{color:'green',fontSize:'14px'}}>Last 500-Transactions</span></p>
-          <table style={{maxWidth:'700px',margin:'auto'}}><thead><tr><th>V#</th><th>Date</th><th>Remarks</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td>{item.voucherNumber}</td><td>{item.date}</td><td style={{minWidth:'160px'}}>{item.narration}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
-          <span style={{cursor:'pointer', color:'red'}} onClick={this.backToTrial}><b>Back to summary</b></span>
+
+          <div style={{backgroundColor:'lightgreen', color:'green',textAlign:'center', fontSize:'22px'}}>Books of Adnan's Cheese <br/> <span style={{fontSize:'15px'}}> 0300-7241301, 0300-1117734 </span></div>
+
+            <p style={{color:'green',fontSize:'14px', textAlign:'right'}}>Last 500-Transactions</p>
+          <p>Account Title: <span style={{color:'green', fontSize:'18px'}}> <b> {this.state.accountTitle}</b></span><br/></p>
+          <table style={{maxWidth:'700px',margin:'auto'}}><thead><tr><th>Date</th><th>Remarks</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td>{item.date}</td><td style={{minWidth:'160px'}}>{item.narration}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
+          <br/>
+          <span style={{cursor:'pointer', color:'green',border:'1px solid lightgreen', backgroundColor:'lightyellow'}} onClick={this.backToTrial}><b>Back to summary</b></span>
           
           </div>
         <br/>
@@ -315,7 +337,68 @@ render(){
 
 {/* Here from div of Statement */}
 <div className={this.state.showStatement===false?'display':'container'}>
-  My Statement
+  
+
+
+<div id='trialPrint' className={this.state.ledgerDisplay === false ? '' : 'display'}> 
+  
+          <br/>
+          
+          <button className="waves-effect waves-dark btn" onClick={this.getData} style={{width:'100%'}}>All Summary</button> <br/>
+          
+          {/* <div className={this.state.status === true ? '' : 'display'}> */}
+          
+          <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>Account Title</th><th>Debit</th><th>Credit</th><th>Account Type</th></tr></thead><tbody>{this.state.partyObjects.map(  (name,ind)=>{return <tr key={ind} ><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
+          {/* <button className="waves-effect waves-dark btn blue" onClick={()=>{this.printStm('trialPrint')}}>Print this page</button> */}
+          
+          {/* </div> */}
+          
+        
+          </div>
+          
+          
+          {/* the following div is in case of ledger display */}
+          <div className={this.state.ledgerDisplay === true ? '' : 'display'}>
+            <br/><br/>
+
+          <div style={{backgroundColor:'lightgreen', color:'green',textAlign:'center', fontSize:'22px'}}>Books of Adnan's Cheese <br/> <span style={{fontSize:'15px'}}> 0300-7241301, 0300-1117734 </span></div>
+
+            <p style={{color:'green',fontSize:'14px', textAlign:'right'}}>Last 500-Transactions</p>
+          <p>Account Title: <span style={{color:'green', fontSize:'18px'}}> <b> {this.state.accountTitle}</b></span><br/></p>
+          <table style={{maxWidth:'700px',margin:'auto'}}><thead><tr><th>Date</th><th>Remarks</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td>{item.date}</td><td style={{minWidth:'160px'}}>{item.narration}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
+          <br/>
+          <span style={{cursor:'pointer', color:'green',border:'1px solid lightgreen', backgroundColor:'lightyellow'}} onClick={this.backToTrial}><b>Back to summary</b></span>
+          
+          </div>
+        <br/>
+          <div className={this.state.status === true ? '' : 'display'}>
+          
+          </div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+{/* className={this.state.getListStatus === false ? 'display' : ''} */}
+
+{/* Here from div of Parties List */}
+<div className={this.state.showPartyList===false?'display':'container'}>
+  <br/>
+<div>
+  <table><thead><tr><th>Account Title</th><th>Contact..etc</th><th>Category</th></tr></thead><tbody>{this.state.partyObjects.map(  (item,index)=>{return <tr key={index}><td>{(index+1) + '- ' + item.partyName}</td><td>{item.address}</td><td>{item.accountCategory}</td></tr>})    }</tbody></table> 
+{/* </div> */}
+</div>
+
+
 </div>
 
   
