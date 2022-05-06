@@ -283,7 +283,7 @@ render(){
         <div style={{textAlign:'center'}} className={this.state.enterKeyInput===false?'container':'display'}>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray', fontSize:'12px'}} onClick={this.showSummary}>Summary</span>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showStatement}>All Summary</span>
-        <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.urduFormate}>Register</span>
+        <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.urduFormate}>Urdu-Khata</span>
         <span className='navBarHomePage' style={{cursor:'pointer', color:'gray',fontSize:'12px'}} onClick={this.showPartyList}>Customer List</span>
         </div>
 
@@ -421,7 +421,7 @@ render(){
           
           {/* <div className={this.state.status === true ? '' : 'display'}> */}
           
-          <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>پارٹی کا نام</th><th>Debit</th><th>Credit</th><th>Account Type</th></tr></thead><tbody>{this.state.partyObjects.map(  (name,ind)=>{return <tr key={ind} ><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
+          <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>پارٹی کا نام</th><th>واجب الوصول</th><th>واجب الادا</th><th>کھاتہ </th></tr></thead><tbody>{this.state.partyObjects.map(  (name,ind)=>{return <tr key={ind} ><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
           {/* <button className="waves-effect waves-dark btn blue" onClick={()=>{this.printStm('trialPrint')}}>Print this page</button> */}
           
           {/* </div> */}
@@ -441,11 +441,11 @@ render(){
           </p>
 
             <p style={{color:'green',fontSize:'14px', textAlign:'left'}}>Last 500-Transactions  <span style={{color:'red',cursor:'pointer'}} onClick={this.last_20_transaction} >o</span>  </p>
-          <p style={{textAlign:'right'}}><span style={{fontSize:'18px'}}> {this.state.accountTitle}  : کھاتہ بنام </span><br/></p>
-          <table style={{maxWidth:'700px',margin:'auto', borderColor:'red'}}><thead><tr><th className='borderHead'> بقایا <br/> روپیہ</th><th className='borderHead'> جمع<br/> روپیہ</th><th className='borderHead'> نام <br/> روپیہ</th><th className='borderHead' style={{textAlign:'center'}}>تفصیل</th><th className='borderHead'>تاریخ </th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td style={{minWidth:'160px', textAlign:'center'}}>{item.narration}</td><td>{item.date}</td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
+          <p style={{textAlign:'right'}}><span style={{fontSize:'18px'}}> <u>{this.state.accountTitle} </u> : کھاتہ بنام </span><br/></p>
+          <table style={{maxWidth:'700px',margin:'auto', borderColor:'red'}}><thead><tr><th className='borderHead center'> بقایا <br/> روپیہ</th><th className='borderHead center'> جمع<br/> روپیہ</th><th className='borderHead center'> نام <br/> روپیہ</th><th className='borderHead' style={{textAlign:'center'}}>تفصیل</th><th className='borderHead center'>تاریخ </th></tr></thead><tbody>{this.state.ledger.map(  (item,index)=>{return <tr key={index}><td className={this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0) >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}><b>{this.state.ledgerBalance.slice(0,index+2).reduce( (total,num)=>{return total+num},0)}</b></td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit <0 ? item.debit : ''}</td><td className={item.debit >= 0 ? 'ldgrPostveAmt' : 'ldgrNegtveAmt'}>{item.debit >=0 ? item.debit : ''}</td><td style={{minWidth:'160px', textAlign:'center'}}>{item.narration}</td><td>{item.date}</td></tr>}).slice(this.state.ledgerFor30Days)    }</tbody></table>  {/*the Slice method is applied on map array to get only last 30 transactions as on your need*/ }
           
           <br/>
-          <span style={{cursor:'pointer', color:'green',border:'1px solid lightgreen', backgroundColor:'lightyellow'}} onClick={this.backToTrial}><b>Back to summary</b></span>
+          <span style={{cursor:'pointer', color:'green',border:'1px solid lightgreen', backgroundColor:'lightyellow'}} onClick={this.backToTrial}><b>واپس جائیں</b></span>
           
           </div>
         <br/>
