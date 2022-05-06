@@ -127,3 +127,9 @@ th{
     display: inline-block;
     margin-left: 20px;
 }
+
+
+.borderHead{
+    border: 1px solid red !important;
+}
+
