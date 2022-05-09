@@ -15,7 +15,8 @@ import firebase from './Fire'
         keyWords:'',
         customerAccessList:[],
         listStatus:false,
-        showAccessDiv:false
+        showAccessDiv:false,
+        clicks:null
       }
 
   }
@@ -54,6 +55,12 @@ import firebase from './Fire'
 
   firebase.database().ref('customerAccess').on('child_added' , (data)=> { 
     this.state.customerAccessList.push(data.val())
+  }  )
+
+
+
+  firebase.database().ref('clicks').on('child_added' , (data)=> {
+    this.setState({clicks:data.val()})
   }  )
 
 
@@ -243,7 +250,10 @@ import firebase from './Fire'
 
 
                 
-               <span style={{color:'blue', fontSize:'20px'}}><b>Welcome... </b> <span><b style={{color:'blue',marginLeft:'30px'}}>{this.state.userEmail}</b></span></span>
+               <span style={{color:'blue', fontSize:'20px'}}><b>Welcome... </b> <span><b style={{color:'blue',marginLeft:'30px'}}>{this.state.userEmail}</b></span></span> <br/>
+
+             <b style={{color:'red',fontSize:'20px'}}> Clicks: {this.state.clicks} </b>
+             
               </div>
 
 
