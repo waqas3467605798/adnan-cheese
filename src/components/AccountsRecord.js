@@ -39,7 +39,7 @@ import {Link, Route, BrowserRouter} from 'react-router-dom'
           <Route path='/AccountsRecord/Content' component={Content}/>
           <Route path='/AccountsRecord/Ledger' component={Ledger}/>
           <Route path='/AccountsRecord/Trial' component={Trial}/>
-          <Route path='/AccountsRecord/Vouchers' component={Vouchers}/>
+          <Route path='/AccountsRecord/DailySales' component={DailySales}/>
           </div>
 
           </div>
@@ -73,7 +73,7 @@ class MainBar extends Component{
           <Link to='/AccountsRecord' style={{textDecoration:'none', marginRight:'8px', color:'green', fontSize:'12px'}}> Data Entry </Link>
           <Link to='/AccountsRecord/Ledger' style={{textDecoration:'none', marginRight:'8px', color:'red', fontSize:'12px'}} > Statement </Link>
           <Link to='/AccountsRecord/Trial' style={{textDecoration:'none', marginRight:'8px', color:'green', fontSize:'12px'}} > Summary </Link>
-          <Link to='/AccountsRecord/Vouchers' style={{textDecoration:'none', marginRight:'8px', color:'red', fontSize:'12px'}} > Vouch. </Link>
+          <Link to='/AccountsRecord/DailySales' style={{textDecoration:'none', marginRight:'8px', color:'red', fontSize:'12px'}} > Daily-Sale </Link>
           </div>
   
         );
@@ -324,6 +324,9 @@ class DataEntry extends Component{
           debit:'',
           date:'',
           narration:'',
+          cgs:'',
+          date_dailyProfit:'',
+          salesPrice:'',
           // objects:[],
           partyObjects:[],
           status:false,         //this only for some changes in state, so that render function can run again
@@ -333,6 +336,8 @@ class DataEntry extends Component{
           voucherNumber:null,
           entrySaved:'',
           color:'',
+          entrySaved_dailySales:'',
+          color_dailySales:'',
           pageRefresh:0
           // viewVoucher:{voucherNumber:0, partyName:null, narration:null,debit:null,date:null}
           
@@ -516,6 +521,62 @@ setTimeout(()=>{
 
 
 
+save_dailyProfit=()=>{
+
+var month = document.getElementById('month_select').value
+var year = document.getElementById('year_select').value
+var month_and_year = month+'-'+year
+
+var dailyProfitObject = {};
+dailyProfitObject.date = this.state.date_dailyProfit;
+dailyProfitObject.costOfGoods = this.state.cgs;
+dailyProfitObject.salesPrice = this.state.salesPrice;
+dailyProfitObject.month = month;
+dailyProfitObject.year = year;
+dailyProfitObject.month_and_year = month_and_year;
+
+var key = firebase.database().ref('dailySales').push().key
+dailyProfitObject.key = key
+firebase.database().ref('dailySales').child(key).set(dailyProfitObject)
+
+
+
+
+
+
+
+
+this.setState({date_dailyProfit:'',cgs:'',salesPrice:''})
+
+
+
+
+this.setState({entrySaved_dailySales: 'Entry Saved'})
+
+setTimeout(() => {
+  this.setState({color_dailySales:'gray'})
+
+
+
+setTimeout(()=>{
+  this.setState({color_dailySales:'lightgray'})
+
+setTimeout(()=>{
+  this.setState({entrySaved_dailySales:'',color_dailySales:''})
+},1000)
+
+},1000)
+
+
+}, 1000);
+
+// console.log(dailyProfitObject)
+}
+
+
+
+
+
 
 
 render(){
@@ -525,6 +586,11 @@ render(){
 
     {/* {this.state.pageRefresh}  */}
   
+
+
+
+
+  {/* Below div is for Data Entry of Accounts Record */}
   <div className='container'>
   <br/>
 
@@ -538,6 +604,28 @@ render(){
   <button className="waves-effect waves-dark btn" onClick={this.saveValue}>Save</button><br/>
   <span style={{fontSize:'20px', color:this.state.color}}><b>{this.state.entrySaved}</b></span>
 </div>
+
+
+
+
+<br/><br/><br/>
+
+
+
+{/* Below div is for Data Entry of Daily Profit Calculation */}
+<div className='container'>
+<h2 style={{textAlign:'center', color:'red'}} className='headings'><b>Daily Profit</b></h2>
+<input type='text' value={this.state.date_dailyProfit} onChange={this.changeHandler} name='date_dailyProfit'  maxLength='8' placeholder='Date Formate (dd.mm.yy)' /> <br/>
+<input type='number' value={this.state.cgs} name='cgs' onChange={this.changeHandler} placeholder='Cost of Goods Sold' /> <br/>
+<input type='number' value={this.state.salesPrice} name='salesPrice' onChange={this.changeHandler} placeholder='Sales Price of the Goods Sold' /> <br/>
+<div style={{width:'35%'}}> <select className='browser-default' id='month_select'><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>Auguest</option><option>September</option><option>October</option><option>November</option><option>December</option></select><select className='browser-default' id='year_select'><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option></select></div>
+<button className="waves-effect waves-dark btn" onClick={this.save_dailyProfit}>Save</button><br/>
+<span style={{fontSize:'20px', color:this.state.color_dailySales}}><b>{this.state.entrySaved_dailySales}</b></span>
+</div>
+
+
+
+
 
 
 
@@ -1106,26 +1194,7 @@ class Ledger extends Component{
 
 
   
-  // async componentDidMount(){
-  //     var dataPushPromise = new Promise( (res,rej)=>{
-  //     var userId = firebase.auth().currentUser.uid;
-  //     var userEmail = firebase.auth().currentUser.email
   
-  //     this.setState({user:userId,userEmail:userEmail})
-      
-  //     res()
-  //     rej('Operation Failed: Data From Firebase does not push in state successfully')
-  //   } )
-  //   dataPushPromise.then(()=>{
-  //     firebase.database().ref('partyList'+this.state.user).on('child_added' , (data)=> { 
-  //       this.state.partyObjects.push(data.val())
-  //     }  )
-  //   },(err)=>{
-  //     alert(err)
-  //   })
-  
-    
-  // }
   
   
     displayLedger = (i)=> {
@@ -1167,27 +1236,7 @@ class Ledger extends Component{
     }
   
 
-    // printStm = (stmDiv)=>{
-    //   // // Method-1 to print the specific div
-    //   // var wholeBody = document.body.innerHTML;
-    //   // var printContent = document.getElementById(stmDiv).innerHTML;
-    //   // document.body.innerHTML = printContent;
-    //   // window.print()
-    //   // document.body.innerHTML = wholeBody
-  
-  
-  
-    //   // Method-2 to print the specific div
-    //   var content = document.getElementById(stmDiv);
-    //   var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-    //   pri.document.open();
-    //   pri.document.write(content.innerHTML);
-    //   pri.document.close();
-    //   pri.focus();
-    //   pri.print();
-  
     
-    // }
   
 
       render(){
@@ -1249,257 +1298,110 @@ class Ledger extends Component{
 
 
   
-  class Vouchers extends Component{
+  class DailySales extends Component{
     constructor(){
       super();
       this.state ={
               user:null,
               userEmail:null,
-              partyObjects:[],
-              allEntries:[],
-              viewVoucher:{},
-              vouchViewStatus:false
+              dailySalesObjects:[],
+              arrayOfSalesPrice:[],
+              arrayOfCostPrice:[]
+              
       }
 
   }
 
 
   async componentDidMount(){
-    var dataPushPromise = new Promise( (res,rej)=>{
+    
     var userId = firebase.auth().currentUser.uid;
     var userEmail = firebase.auth().currentUser.email
     this.setState({user:userId,userEmail:userEmail})
-    res()
-    rej('Operation Failed: Data From Firebase does not push in state successfully')
-  } )
-  dataPushPromise.then(()=>{
 
-    var pushPromise = new Promise((resolve,reject)=>{
-      var obj = [];
-      firebase.database().ref('partyList').on('child_added' , (data)=> { 
-        obj.push(data.val())
+    
+
+
+
+
+
+    var dataPushPromis = new Promise( (res,rej)=>{
+      var array = [];
+      var arrayOfSalesPrice = [];
+      var arrayOfCostPrice = [];
+
+      firebase.database().ref('dailySales').on('child_added' , (data)=> { 
+        array.push(data.val())
       }  )
-      resolve(obj)
-      reject('Operation failed')
-    })
-    pushPromise.then((ob)=>{
-      this.setState({partyObjects:ob})
 
 
 
-
-// write code here
-var getLedgersPromise = new Promise((res,rej)=>{
-  var allEntries = []
-  this.state.partyObjects.map((itm)=>{ 
-    if('ledger' in itm){
-      return itm.ledger.map((entry)=>{ return allEntries.push(entry)})
-    }
-  
-  })
-  res(allEntries)
-  rej('operation failed')
-})
-
-getLedgersPromise.then((all_entries)=>{
-  
-
-  all_entries.sort((a, b) => (a.voucherNumber < b.voucherNumber) ? 1 : -1)
-// var entriesWithOrder = [];
-// for (var i = 1; i <= all_entries.length; i++) {
-//   entriesWithOrder.push(    all_entries.find((ob)=>{return ob.voucherNumber === i})                 )
-//   }
+      firebase.database().ref('dailySales').on('child_added' , (data)=> { 
+        arrayOfSalesPrice.push(   Number(data.val().salesPrice)   ) 
+      }  )
 
 
+      firebase.database().ref('dailySales').on('child_added' , (data)=> { 
+        arrayOfCostPrice.push(  Number(data.val().costOfGoods)  )
+      }  )
+      
 
-  this.setState({allEntries:all_entries})
+      var obj = {};
+          obj.objectsArray = array
+          obj.arrayOfSalesPrice = arrayOfSalesPrice
+          obj.arrayOfCostPrice = arrayOfCostPrice
 
-
-
-},(err)=>{
-  console.log(err)
-})
-// Voucher code ended
+      res(obj)
+      rej('Operation Failed: Data From Firebase does not push in the state successfully')
+    } )
+    dataPushPromis.then( (ob)=>{
+      this.setState({dailySalesObjects:ob.objectsArray, arrayOfSalesPrice:ob.arrayOfSalesPrice, arrayOfCostPrice:ob.arrayOfCostPrice})
+    } )
 
 
 
 
 
-
-
-
-
-
-
-    },(er)=>{
-      alert(er)
-    })
-
-
-  },(err)=>{
-    alert(err)
-  })
 
     
 }
 
 
 
-
-
-  
-//Better Code
-// var getLedgersPromise = new Promise((res,rej)=>{
-//   var allEntries = []
-//   this.state.partyObjects.map((itm)=>{ 
-//     if('ledger' in itm){
-//       return itm.ledger.map((entry)=>{ return allEntries.push(entry)})
-//     }
-  
-//   })
-//   res(allEntries)
-//   rej('operation failed')
-// })
-
-// getLedgersPromise.then((all_entries)=>{
-  
-//   this.setState({allEntries:all_entries})
-
-
-// console.log(this.state.allEntries)
-// },(err)=>{
-//   console.log(err)
-// })
-
-
-
-
-
-
-
-
-
-
-
-// var getLedgersPromise = new Promise((res,rej)=>{
-//   var allEntries = []
-//   this.state.partyObjects.map((itm)=>{ return  itm.ledger.map((entry)=>{return allEntries.push(entry)})})
-//   res(allEntries)
-//   rej('operation failed')
-// })
-
-// getLedgersPromise.then((all_entries)=>{
-  
-//   this.setState({allEntries:all_entries})
-
-
-// console.log(this.state.allEntries)
-// },(err)=>{
-//   console.log(err)
-// })
-
-
-
-viewVoucher = ()=>{
-  var vouchNum = document.getElementById('vouchNum').value
-
-  var findVoucherObj = new Promise((res,rej)=>{
-    
-    var obj = this.state.allEntries.find((ob)=>{return ob.voucherNumber === Number(vouchNum)})
-    
-    if(obj){
-      this.setState({vouchViewStatus:true})
-    res(obj)
-    }
-    else{
-    rej('Voucher Number Not Found in Record')
-    }
-  })
-
-  findVoucherObj.then((objct)=>{
-    this.setState({viewVoucher:objct})
-    
-  },(err)=>{
-    alert(err)
-  })
-
+editDailyProfit=(i)=>{
 
 }
 
+
+
+deleteDailyProfit=(i)=>{
+
+}
+
+  
 
 
 
 
     render(){
         return(
-          <div>
-            <br/><br/>
-       {/* To view the voucher only for Print */}
-       <h5 className='container' style={{color:'blue'}}>View Voucher</h5>
-       <div className='container'>
-            <input type='Number' id='vouchNum' placeholder='Enter Voucher Number'/>
-            <button className="waves-effect waves-dark btn" onClick={this.viewVoucher}>View Voucher</button>
-<br/><br/>
-            <div className={this.state.vouchViewStatus === false ? 'display' : ''} style={{border:'3px solid blue'}}>
-            <div className="card white darken-1 ">
-             <div className="card-content white-text">
-              <span style={{color:'black'}}>
+          <div className='container'>
+            
+
+        Daily sales
+        {/* {this.state.dailySalesObjects.map( (it,ind)=>{return <p>{it.month_and_year}</p>} )}
+        {this.state.arrayOfSalesPrice.map( (it,ind)=>{return <p>{it}</p>} )}
+        {this.state.arrayOfCostPrice.map( (it,ind)=>{return <p>{it}</p>} )} */}
 
 
-             <b> Voucher No. {this.state.viewVoucher.voucherNumber}</b>            
-                <table>
-                <tbody>
-                <tr><td>Date:</td><td>{this.state.viewVoucher.date}</td></tr>
-                <tr><td>Account Title:</td><td>{this.state.viewVoucher.partyName}</td></tr>
-                <tr><td>Transaction Amount:</td><td>Rs. {this.state.viewVoucher.debit}</td></tr>
-                <tr><td>Remarks:</td><td>{this.state.viewVoucher.narration}</td></tr>
-                <tr style={{color:'red', textDecoration:'overLine'}}><td> <br/><br/>Entered By:</td><td><br/><br/>Approved By:</td></tr>
-                </tbody>
-              </table>
+        <table><thead><tr><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th><th>E/D</th></tr></thead><tbody>{this.state.dailySalesObjects.map(  (item,index)=>{return <tr key={index}><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td><td><a href='#' className="material-icons" style={{color:'green',fontSize:'15px'}} onClick={()=> this.editDailyProfit(index)}>edit</a><a href='#' className="material-icons" style={{color:'red',fontSize:'15px'}} onClick={()=> this.deleteDailyProfit(index)}>delete</a></td></tr>})    }</tbody></table> 
+        <div>
+          Total Cost {this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
+          Total Sales {this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
+          Total Profit {this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0) }   <br/>
+          Ratio {  ((this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)  )/this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)*100).toFixed(2) } %  <br/>
 
-              </span>
-
-            </div>
-          </div>
-          </div>
-          </div>
-
-
-
-
-          {/* display of Last 10 Vouchers */}
-          <br/>
-          <div className='container'><h5 style={{color:'blue', backgroundColor:'lightgreen', textAlign:'center'}}>Last 10 Vouchers are as under;</h5></div>
-          <div> {this.state.allEntries.map( (voucher,index)=>{return <div key={index}>        
-          
-          <div className="row container" style={{margin:'auto', border:'1px solid blue', marginBottom:'18px'}}>
-           <div className="card white darken-1">
-             <div className="card-content white-text">
-              <span style={{color:'black'}}>
-
-
-             <b> Voucher No. {voucher.voucherNumber}</b>            
-                <table>
-                <tbody>
-                <tr><td>Date:</td><td>{voucher.date}</td></tr>
-                <tr><td>Account Title:</td><td><b>{voucher.partyName}</b></td></tr>
-                <tr><td>Transaction Amount:</td><td><b>Rs. {voucher.debit}</b> {voucher.debit > 0 ? 'Debit' : 'Credit'} </td></tr>
-                <tr><td>Remarks:</td><td>{voucher.narration}</td></tr>
-                <tr style={{color:'red', textDecoration:'overLine'}}><td> <br/><br/>Entered By:</td><td><br/><br/>Approved By:</td></tr>
-                </tbody>
-              </table>
-
-              </span>
-
-            </div>
-          </div>
-         </div>
-
-          </div>} ).slice(0,10)         } </div>
-          
-          
-
-
+        </div>
 
           </div>
         )
