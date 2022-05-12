@@ -618,7 +618,7 @@ render(){
 <input type='text' value={this.state.date_dailyProfit} onChange={this.changeHandler} name='date_dailyProfit'  maxLength='8' placeholder='Date Formate (dd.mm.yy)' /> <br/>
 <input type='number' value={this.state.cgs} name='cgs' onChange={this.changeHandler} placeholder='Cost of Goods Sold' /> <br/>
 <input type='number' value={this.state.salesPrice} name='salesPrice' onChange={this.changeHandler} placeholder='Sales Price of the Goods Sold' /> <br/>
-<div style={{width:'35%'}}> <select className='browser-default' id='month_select'><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>Auguest</option><option>September</option><option>October</option><option>November</option><option>December</option></select><select className='browser-default' id='year_select'><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option></select></div>
+<div style={{width:'35%'}}> <select className='browser-default' id='month_select'><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>June</option><option>July</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></select><select className='browser-default' id='year_select'><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option></select></div>
 <button className="waves-effect waves-dark btn" onClick={this.save_dailyProfit}>Save</button><br/>
 <span style={{fontSize:'20px', color:this.state.color_dailySales}}><b>{this.state.entrySaved_dailySales}</b></span>
 </div>
@@ -1306,7 +1306,11 @@ class Ledger extends Component{
               userEmail:null,
               dailySalesObjects:[],
               arrayOfSalesPrice:[],
-              arrayOfCostPrice:[]
+              arrayOfCostPrice:[],
+              arrayOfMonthlySales:[],
+              arrayOfMonthlyCostPrice:[],
+              arrayOfMonthlySalesPrice:[],
+              pageRefresh:0,
               
       }
 
@@ -1363,14 +1367,89 @@ class Ledger extends Component{
 
 
 
+
+
+
+    setTimeout(() => {
+  
+      const inteId =setInterval(()=>{
+        this.setState({pageRefresh: this.state.pageRefresh+1})
+      },1000)
+
+      setTimeout(() => {
+        clearInterval(inteId);
+      }, 30000);
+    
+    
+    
+    }, 1000);
+
+
+
+
+
+
+
+
     
 }
 
 
 
 editDailyProfit=(i)=>{
+  var reqObj = this.state.dailySalesObjects[i]
+  var key = this.state.dailySalesObjects[i].key
+  
+  var editMonth_year = prompt('Please edit Month & Year',reqObj.month_and_year)
+  if(editMonth_year === null){
+    editMonth_year = reqObj.month_and_year
+  }
+  
+  var editDate = prompt('Please edit Date',reqObj.date)
+  if(editDate === null){
+    editDate = reqObj.date
+  }
+  
+  
+  var editCostOfGoods = prompt('Please edit Cost Value',reqObj.costOfGoods)
+  if(editCostOfGoods === null){
+    editCostOfGoods = reqObj.costOfGoods
+  }
+  
 
+  var editSalesPrice = prompt('Please edit Sales Value',reqObj.salesPrice)
+  if(editSalesPrice === null){
+    editSalesPrice = reqObj.salesPrice
+  }
+
+
+  var editMonth = prompt('Please edit Month',reqObj.month)
+  if(editMonth === null){
+    editMonth = reqObj.month
+  }
+
+
+  var editYear = prompt('Please edit Month',reqObj.year)
+  if(editYear === null){
+    editYear = reqObj.year
+  }
+
+  
+  reqObj.month_and_year = editMonth_year.replace(/  +/g, ' ').trim();
+  reqObj.date = editDate.replace(/  +/g, ' ').trim()
+  reqObj.costOfGoods = editCostOfGoods.replace(/  +/g, ' ').trim()
+  reqObj.salesPrice = editSalesPrice.replace(/  +/g, ' ').trim()
+  reqObj.month = editMonth.replace(/  +/g, ' ').trim()
+  reqObj.year = editYear.replace(/  +/g, ' ').trim()
+  
+  
+  firebase.database().ref('dailySales').child(reqObj.key).set(reqObj)
+  
+  
+  this.state.dailySalesObjects.splice(i,1,reqObj)
 }
+
+
 
 
 
@@ -1380,27 +1459,66 @@ deleteDailyProfit=(i)=>{
 
   
 
+monthlyProfit=()=>{
+this.setState({arrayOfMonthlyCostPrice:[],arrayOfMonthlySalesPrice:[]})
 
+  var month = document.getElementById('month_select_report').value
+  var year = document.getElementById('year_select_report').value
+  var req_month = month+'-'+year
+
+  var req_objects = this.state.dailySalesObjects.filter(  (obj)=>{return obj.month_and_year === req_month}  )
+
+
+
+  setTimeout(() => {
+
+  req_objects.map((itm,ind)=>{return this.state.arrayOfMonthlyCostPrice.push( Number(itm.costOfGoods) )})
+  req_objects.map((itm,ind)=>{return this.state.arrayOfMonthlySalesPrice.push(  Number(itm.salesPrice)  )})
+  
+  
+  }, 300);
+
+
+
+
+  this.setState({arrayOfMonthlySales:req_objects})
+  console.log(this.state.arrayOfMonthlyCostPrice)
+
+}
 
 
     render(){
         return(
           <div className='container'>
             
-
+{/* {this.state.pageRefresh} */}
         Daily sales
         {/* {this.state.dailySalesObjects.map( (it,ind)=>{return <p>{it.month_and_year}</p>} )}
         {this.state.arrayOfSalesPrice.map( (it,ind)=>{return <p>{it}</p>} )}
         {this.state.arrayOfCostPrice.map( (it,ind)=>{return <p>{it}</p>} )} */}
 
 
-        <table><thead><tr><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th><th>E/D</th></tr></thead><tbody>{this.state.dailySalesObjects.map(  (item,index)=>{return <tr key={index}><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td><td><a href='#' className="material-icons" style={{color:'green',fontSize:'15px'}} onClick={()=> this.editDailyProfit(index)}>edit</a><a href='#' className="material-icons" style={{color:'red',fontSize:'15px'}} onClick={()=> this.deleteDailyProfit(index)}>delete</a></td></tr>})    }</tbody></table> 
+        <table><thead><tr><th>Month</th><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th><th>E/D</th></tr></thead><tbody>{this.state.dailySalesObjects.map(  (item,index)=>{return <tr key={index}><td>{item.month_and_year}</td><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td><td><a href='#' className="material-icons" style={{color:'green',fontSize:'15px'}} onClick={()=> this.editDailyProfit(index)}>edit</a><a href='#' className="material-icons" style={{color:'red',fontSize:'15px'}} onClick={()=> this.deleteDailyProfit(index)}>delete</a></td></tr>})    }</tbody></table> 
         <div>
           Total Cost {this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
           Total Sales {this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
           Total Profit {this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0) }   <br/>
           Ratio {  ((this.state.arrayOfSalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)  )/this.state.arrayOfCostPrice.reduce( (total,num)=>{return total+num},0)*100).toFixed(2) } %  <br/>
+        </div>
 
+
+
+<br/><br/><br/>
+
+<div style={{width:'35%'}}> <select className='browser-default' id='month_select_report'><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>June</option><option>July</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></select><select className='browser-default' id='year_select_report'><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option></select></div>
+<button className="waves-effect waves-dark btn" onClick={this.monthlyProfit}>Run Report</button>
+
+<table><thead><tr><th>Month</th><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th></tr></thead><tbody>{this.state.arrayOfMonthlySales.map(  (item,index)=>{return <tr key={index}><td>{item.month_and_year}</td><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td></tr>})    }</tbody></table> 
+<div>
+          Total Cost {this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
+          Total Sales {this.state.arrayOfMonthlySalesPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
+          Total Profit {this.state.arrayOfMonthlySalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0) }   <br/>
+          Ratio {  ((this.state.arrayOfMonthlySalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0)  )/this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0)*100).toFixed(2) } %  <br/>
         </div>
 
           </div>
