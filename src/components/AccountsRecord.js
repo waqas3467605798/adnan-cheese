@@ -1454,7 +1454,15 @@ editDailyProfit=(i)=>{
 
 
 deleteDailyProfit=(i)=>{
+  var delKey = prompt("write 'Y' and Press OK")
 
+  if(delKey==='Y'){
+  var key = this.state.dailySalesObjects[i].key
+  firebase.database().ref('dailySales').child(key).remove()
+  this.state.dailySalesObjects.splice(i,1)
+  }else{
+    alert('You have entered wrong key')
+  }
 }
 
   
@@ -1491,11 +1499,8 @@ this.setState({arrayOfMonthlyCostPrice:[],arrayOfMonthlySalesPrice:[]})
         return(
           <div className='container'>
             
-{/* {this.state.pageRefresh} */}
-        Daily sales
-        {/* {this.state.dailySalesObjects.map( (it,ind)=>{return <p>{it.month_and_year}</p>} )}
-        {this.state.arrayOfSalesPrice.map( (it,ind)=>{return <p>{it}</p>} )}
-        {this.state.arrayOfCostPrice.map( (it,ind)=>{return <p>{it}</p>} )} */}
+
+       
 
 
         <table><thead><tr><th>Month</th><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th><th>E/D</th></tr></thead><tbody>{this.state.dailySalesObjects.map(  (item,index)=>{return <tr key={index}><td>{item.month_and_year}</td><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td><td><a href='#' className="material-icons" style={{color:'green',fontSize:'15px'}} onClick={()=> this.editDailyProfit(index)}>edit</a><a href='#' className="material-icons" style={{color:'red',fontSize:'15px'}} onClick={()=> this.deleteDailyProfit(index)}>delete</a></td></tr>})    }</tbody></table> 
@@ -1514,7 +1519,7 @@ this.setState({arrayOfMonthlyCostPrice:[],arrayOfMonthlySalesPrice:[]})
 <button className="waves-effect waves-dark btn" onClick={this.monthlyProfit}>Run Report</button>
 
 <table><thead><tr><th>Month</th><th>Date</th><th>Cost of Goods</th><th>Sales Amount</th><th>Profit</th><th>Ratio</th></tr></thead><tbody>{this.state.arrayOfMonthlySales.map(  (item,index)=>{return <tr key={index}><td>{item.month_and_year}</td><td>{item.date}</td><td>{item.costOfGoods}</td><td>{item.salesPrice}</td><td>{item.salesPrice-item.costOfGoods}</td><td>{((item.salesPrice-item.costOfGoods)/item.costOfGoods*100).toFixed(2)}%</td></tr>})    }</tbody></table> 
-<div>
+        <div>
           Total Cost {this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
           Total Sales {this.state.arrayOfMonthlySalesPrice.reduce( (total,num)=>{return total+num},0)}  <br/>
           Total Profit {this.state.arrayOfMonthlySalesPrice.reduce( (total,num)=>{return total+num},0)  -  this.state.arrayOfMonthlyCostPrice.reduce( (total,num)=>{return total+num},0) }   <br/>

@@ -136,5 +136,9 @@ th{
 
 }
 
-
-
+#year_select_report{
+    display: inline;
+}
+#month_select_report{
+    display: inline;
+}
