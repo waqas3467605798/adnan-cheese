@@ -84,6 +84,9 @@ class Trial extends Component{
               showProfitReport:false,
 
 
+              trialSum:[],
+
+
 
 
             pageRefresh:0,
@@ -115,7 +118,7 @@ class Trial extends Component{
           rej('Operation Failed');
         })
         pushPromise.then((ob)=>{
-          this.setState({partyObjects:ob.sort((a, b) => (a.accountCategory > b.accountCategory) ? 1 : -1)      })
+          this.setState({partyObjects:ob      })
         },(er)=>{
           alert(er)
         })
@@ -137,6 +140,7 @@ var dataPushPromisDailyProfit = new Promise( (res,rej)=>{
       var array = [];
       var arrayOfSalesPrice = [];
       var arrayOfCostPrice = [];
+      
 
       firebase.database().ref('dailySales').on('child_added' , (data)=> { 
         array.push(data.val())
@@ -153,6 +157,10 @@ var dataPushPromisDailyProfit = new Promise( (res,rej)=>{
         arrayOfCostPrice.push(  Number(data.val().costOfGoods)  )
       }  )
       
+
+
+      
+
 
       var obj = {};
           obj.objectsArray = array
@@ -216,7 +224,7 @@ var dataPushPromisDailyProfit = new Promise( (res,rej)=>{
   
       setTimeout(()=>{
         this.setState({seemsInternetIsSlow:'Seems internet speed is slow, try again later'})
-      },8000)
+      },12000)
   
   
       },200)
@@ -519,6 +527,10 @@ render(){
   <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>پارٹی کا نام</th><th>واجب الوصول</th><th>واجب الادا</th><th>کھاتہ </th></tr></thead><tbody>{this.state.partyObjects.map(  (name,ind)=>{return <tr key={ind} className={name.sum.reduce( (total,num)=>{return total+num},0)===0 ? 'display' : ''}><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
   {/* <button className="waves-effect waves-dark btn blue" onClick={()=>{this.printStm('trialPrint')}}>Print this page</button> */}
   
+  {/* {this.state.partyObjects.map((sm,ind)=>{return   sm.sum.reduce( (total,num)=>{return total+num},0)           })} */}
+  {/* {this.state.partyObjects.filter((sm)=>{return this.state.trialSum.push(   sm.sum.reduce( (total,num)=>{return total+num},0)     )      })} */}
+  {/* {this.state.trialSum} */}
+  
   {/* </div> */}
   
 
@@ -578,7 +590,7 @@ render(){
           
           {/* <div className={this.state.status === true ? '' : 'display'}> */}
           
-          <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>پارٹی کا نام</th><th>واجب الوصول</th><th>واجب الادا</th><th>کھاتہ </th></tr></thead><tbody>{this.state.partyObjects.map(  (name,ind)=>{return <tr key={ind} ><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
+          <table style={{maxWidth:'850px',margin:'auto'}}><thead><tr><th>پارٹی کا نام</th><th>واجب الوصول</th><th>واجب الادا</th><th>کھاتہ </th></tr></thead><tbody>{this.state.partyObjects.sort((a, b) => (a.partyName > b.partyName) ? 1 : -1).map(  (name,ind)=>{return <tr key={ind} ><td style={{minWidth:'150px'}}><a href='#' onClick={()=>this.displayLedger(ind)} style={{color:'blue'}}>{name.partyName}</a></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td className={name.sum.reduce( (total,num)=>{return total+num},0) > 0 ? 'trialPositiveAmt' : 'trialNegativeAmt'}><b>{name.sum.reduce( (total,num)=>{return total+num},0) < 0 ? name.sum.reduce( (total,num)=>{return total+num},0) : '-'}</b></td><td style={{fontSize:'12px'}}>{name.accountCategory}</td></tr>})}</tbody></table>
           {/* <button className="waves-effect waves-dark btn blue" onClick={()=>{this.printStm('trialPrint')}}>Print this page</button> */}
           
           {/* </div> */}
